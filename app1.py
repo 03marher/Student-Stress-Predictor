@@ -16,6 +16,16 @@ st.set_page_config(
 # -----------------------------
 df = pd.read_excel("StudentStressFactors.xlsx")
 
+# Rename columns to clean names
+df.columns = [
+    "sleep_quality",
+    "headaches",
+    "academic_performance",
+    "study_load",
+    "extra_activities",
+    "stress_level"
+]
+
 # ⚠️ If this errors, we will fix column names
 X = df[["sleep_quality", "headaches", "academic_performance", "study_load", "extra_activities"]]
 y = df["stress_level"]
