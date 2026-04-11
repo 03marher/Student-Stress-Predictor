@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+import math
 
-# Page setup
+# -----------------------------
+# PAGE SETUP
+# -----------------------------
 st.set_page_config(
     page_title="Student Stress Predictor",
     page_icon="🧠",
@@ -25,51 +28,8 @@ st.markdown("""
     font-size: 16px;
     font-weight: 600;
 }
-.gauge-wrap {
+.gauge-container {
     text-align: center;
-    margin-top: 10px;
-}
-.gauge-arc {
-    width: 260px;
-    height: 130px;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-}
-.arc {
-    position: absolute;
-    width: 260px;
-    height: 260px;
-    border-radius: 50%;
-    border: 20px solid transparent;
-    top: 0;
-    left: 0;
-}
-.low { border-top-color: #4CAF50; transform: rotate(210deg); }
-.mid { border-top-color: #FFC107; transform: rotate(180deg); }
-.high { border-top-color: #F44336; transform: rotate(150deg); }
-.center {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: white;
-    border-radius: 50%;
-    left: 40px;
-    top: 40px;
-}
-.needle {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    width: 5px;
-    height: 80px;
-    background: #333;
-    transform-origin: bottom;
-    transform: rotate(45deg);
-}
-.score-text {
-    font-size: 1.8rem;
-    font-weight: bold;
     margin-top: 10px;
 }
 </style>
@@ -89,11 +49,85 @@ df.columns = [
     "stress_level"
 ]
 
-X = df[["sleep_quality", "headaches", "academic_performance", "study_load", "extra_activities"]]
+X = df[[
+    "sleep_quality",
+    "headaches",
+    "academic_performance",
+    "study_load",
+    "extra_activities"
+]]
 y = df["stress_level"]
 
 model = RandomForestClassifier()
 model.fit(X, y)
+
+# -----------------------------
+# RECOMMENDATIONS
+# -----------------------------
+def get_recommendations(level):
+    if level == "Low":
+        return [
+            "Maintain your current balance and healthy habits.",
+            "Keep a consistent sleep schedule.",
+            "Stay proactive with your workload."
+        ]
+    elif level == "Moderate":
+        return [
+            "Break tasks into smaller chunks.",
+            "Plan your week ahead to avoid overload.",
+            "Aim for better sleep consistency."
+        ]
+    else:
+        return [
+            "Reduce workload if possible.",
+            "Reach out to academic or counseling support.",
+            "Prioritize rest and recovery."
+        ]
+
+# -----------------------------
+# GAUGE (REAL HALF CIRCLE)
+# -----------------------------
+def gauge_html(score):
+    rotation = (score / 100) * 180 - 90
+
+    x = 150 + 100 * math.cos(math.radians(rotation))
+    y = 150 - 100 * math.sin(math.radians(rotation))
+
+    return f"""
+    <div class="gauge-container">
+        <svg width="300" height="180">
+
+            <!-- Background arc -->
+            <path d="M50 150 A100 100 0 0 1 250 150"
+                  fill="none" stroke="#eee" stroke-width="20"/>
+
+            <!-- Low -->
+            <path d="M50 150 A100 100 0 0 1 150 50"
+                  fill="none" stroke="#4CAF50" stroke-width="20"/>
+
+            <!-- Moderate -->
+            <path d="M150 50 A100 100 0 0 1 210 90"
+                  fill="none" stroke="#FFC107" stroke-width="20"/>
+
+            <!-- High -->
+            <path d="M210 90 A100 100 0 0 1 250 150"
+                  fill="none" stroke="#F44336" stroke-width="20"/>
+
+            <!-- Needle -->
+            <line x1="150" y1="150"
+                  x2="{x}" y2="{y}"
+                  stroke="#333" stroke-width="4"/>
+
+            <!-- Center dot -->
+            <circle cx="150" cy="150" r="6" fill="#333"/>
+
+        </svg>
+
+        <div style="font-size:22px; font-weight:bold; margin-top:5px;">
+            {score}/100
+        </div>
+    </div>
+    """
 
 # -----------------------------
 # HEADER
@@ -101,16 +135,16 @@ model.fit(X, y)
 st.title("🧠 Student Stress Predictor")
 st.caption("Estimate your stress level based on your habits")
 
-st.info("⚠️ This is an educational tool and not medical advice.")
+st.info("⚠️ Educational tool only. Not medical advice.")
 
 st.divider()
 
 # -----------------------------
-# INPUTS (IMPROVED DESCRIPTIONS)
+# INPUTS
 # -----------------------------
 st.subheader("📋 Enter Your Information")
 
-st.markdown("Use a scale from **1 (Very Low/Poor)** to **5 (Very High/Excellent)** based on your experience.")
+st.markdown("Use a scale from **1 (Very Low/Poor)** to **5 (Very High/Excellent)**.")
 
 col1, col2 = st.columns(2)
 
@@ -126,26 +160,13 @@ with col2:
 st.divider()
 
 # -----------------------------
-# GAUGE FUNCTION
+# SESSION STATE (IMPORTANT FIX)
 # -----------------------------
-def gauge_html(score):
-    rotation = int((score / 100) * 180 - 90)
-
-    return f"""
-    <div class="gauge-wrap">
-        <div class="gauge-arc">
-            <div class="arc low"></div>
-            <div class="arc mid"></div>
-            <div class="arc high"></div>
-            <div class="center"></div>
-            <div class="needle" style="transform: rotate({rotation}deg);"></div>
-        </div>
-        <div class="score-text">{score}/100</div>
-    </div>
-    """
+if "result" not in st.session_state:
+    st.session_state.result = None
 
 # -----------------------------
-# PREDICTION
+# BUTTON
 # -----------------------------
 if st.button("🔍 Predict Stress Level"):
 
@@ -160,16 +181,39 @@ if st.button("🔍 Predict Stress Level"):
     prediction = model.predict(input_data)[0]
     score = int(prediction) * 20
 
+    if score >= 80:
+        level = "High"
+    elif score >= 60:
+        level = "Moderate"
+    else:
+        level = "Low"
+
+    st.session_state.result = (score, level)
+
+# -----------------------------
+# DISPLAY RESULT (FIXED)
+# -----------------------------
+if st.session_state.result:
+
+    score, level = st.session_state.result
+
     st.subheader("📊 Your Result")
 
     st.markdown(gauge_html(score), unsafe_allow_html=True)
 
-    if score >= 80:
+    if level == "High":
         st.error("🔴 High Stress Level")
-    elif score >= 60:
+    elif level == "Moderate":
         st.warning("🟡 Moderate Stress Level")
     else:
         st.success("🟢 Low Stress Level")
+
+    st.markdown("### 💡 Recommendations")
+
+    tips = get_recommendations(level)
+
+    for tip in tips:
+        st.write(f"• {tip}")
 
 # -----------------------------
 # FOOTER
