@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-import math
+import plotly.graph_objects as go
 
 # -----------------------------
 # PAGE SETUP
@@ -27,10 +27,6 @@ st.markdown("""
     height: 3em;
     font-size: 16px;
     font-weight: 600;
-}
-.gauge-container {
-    text-align: center;
-    margin-top: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -85,49 +81,26 @@ def get_recommendations(level):
         ]
 
 # -----------------------------
-# GAUGE (REAL HALF CIRCLE)
+# PLOTLY GAUGE
 # -----------------------------
-def gauge_html(score):
-    rotation = (score / 100) * 180 - 90
+def plotly_gauge(score):
 
-    x = 150 + 100 * math.cos(math.radians(rotation))
-    y = 150 - 100 * math.sin(math.radians(rotation))
+    fig = go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=score,
+        title={'text': "Stress Score"},
+        gauge={
+            'axis': {'range': [0, 100]},
+            'bar': {'color': "#2b7cff"},
+            'steps': [
+                {'range': [0, 40], 'color': "#4CAF50"},
+                {'range': [40, 70], 'color': "#FFC107"},
+                {'range': [70, 100], 'color': "#F44336"}
+            ]
+        }
+    ))
 
-    return f"""
-    <div class="gauge-container">
-        <svg width="300" height="180">
-
-            <!-- Background arc -->
-            <path d="M50 150 A100 100 0 0 1 250 150"
-                  fill="none" stroke="#eee" stroke-width="20"/>
-
-            <!-- Low -->
-            <path d="M50 150 A100 100 0 0 1 150 50"
-                  fill="none" stroke="#4CAF50" stroke-width="20"/>
-
-            <!-- Moderate -->
-            <path d="M150 50 A100 100 0 0 1 210 90"
-                  fill="none" stroke="#FFC107" stroke-width="20"/>
-
-            <!-- High -->
-            <path d="M210 90 A100 100 0 0 1 250 150"
-                  fill="none" stroke="#F44336" stroke-width="20"/>
-
-            <!-- Needle -->
-            <line x1="150" y1="150"
-                  x2="{x}" y2="{y}"
-                  stroke="#333" stroke-width="4"/>
-
-            <!-- Center dot -->
-            <circle cx="150" cy="150" r="6" fill="#333"/>
-
-        </svg>
-
-        <div style="font-size:22px; font-weight:bold; margin-top:5px;">
-            {score}/100
-        </div>
-    </div>
-    """
+    st.plotly_chart(fig, use_container_width=True)
 
 # -----------------------------
 # HEADER
@@ -135,7 +108,7 @@ def gauge_html(score):
 st.title("🧠 Student Stress Predictor")
 st.caption("Estimate your stress level based on your habits")
 
-st.info("⚠️ Educational tool only. Not medical advice.")
+st.info("⚠️ This is an educational tool and not medical advice.")
 
 st.divider()
 
@@ -160,7 +133,7 @@ with col2:
 st.divider()
 
 # -----------------------------
-# SESSION STATE (IMPORTANT FIX)
+# SESSION STATE (fix for results)
 # -----------------------------
 if "result" not in st.session_state:
     st.session_state.result = None
@@ -191,7 +164,7 @@ if st.button("🔍 Predict Stress Level"):
     st.session_state.result = (score, level)
 
 # -----------------------------
-# DISPLAY RESULT (FIXED)
+# DISPLAY RESULTS
 # -----------------------------
 if st.session_state.result:
 
@@ -199,8 +172,10 @@ if st.session_state.result:
 
     st.subheader("📊 Your Result")
 
-    st.markdown(gauge_html(score), unsafe_allow_html=True)
+    # Gauge (FIXED)
+    plotly_gauge(score)
 
+    # Status message
     if level == "High":
         st.error("🔴 High Stress Level")
     elif level == "Moderate":
@@ -208,6 +183,7 @@ if st.session_state.result:
     else:
         st.success("🟢 Low Stress Level")
 
+    # Recommendations (FIXED)
     st.markdown("### 💡 Recommendations")
 
     tips = get_recommendations(level)
