@@ -150,19 +150,8 @@ if st.button("🔍 Predict Stress Level"):
     })
 
     prediction = model.predict(input_data)[0]
-
-    # Base score
     score = int(prediction) * 20
 
-    # Add logic (makes it feel more realistic)
-    score += (study_load * 3)
-    score -= (sleep_quality * 3)
-    score += (headaches * 2)
-
-    # Keep score valid
-    score = min(max(score, 0), 100)
-
-    # Determine level
     if score >= 80:
         level = "High"
     elif score >= 60:
