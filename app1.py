@@ -162,12 +162,12 @@ score += (headaches * 2)
 # keep it in range
 score = min(max(score, 0), 100)
 
-    if score >= 80:
-        level = "High"
-    elif score >= 60:
-        level = "Moderate"
-    else:
-        level = "Low"
+if score >= 80:
+    level = "High"
+elif score >= 60:
+    level = "Moderate"
+else:
+    level = "Low"
 
     st.session_state.result = (score, level)
 
