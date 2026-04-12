@@ -54,8 +54,27 @@ X = df[[
 ]]
 y = df["stress_level"]
 
-model = RandomForestClassifier()
-model.fit(X, y)
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Scale data
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Train model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train_scaled, y_train)
+
+# Accuracy (optional but useful)
+accuracy = model.score(X_test_scaled, y_test)
+st.caption(f"Model accuracy: {round(accuracy * 100, 1)}%")
 
 # -----------------------------
 # RECOMMENDATIONS
@@ -151,8 +170,11 @@ if st.button("🔍 Predict Stress Level"):
         "extra_activities": [extra_activities]
     })
 
-    prediction = model.predict(input_data)[0]
-    score = int(prediction) * 20
+input_scaled = scaler.transform(input_data)
+prediction = model.predict(input_scaled)[0]
+
+score = int(prediction) * 20
+score = min(max(score, 0), 100)   # keeps it between 0–100
 
     if score >= 80:
         level = "High"
