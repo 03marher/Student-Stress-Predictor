@@ -198,7 +198,7 @@ score = int(score)
 prediction = model.predict(input_scaled)[0]
 level = prediction
 
-    st.session_state.result = (score, level)
+st.session_state.result = (score, level)
 # -----------------------------
 # DISPLAY RESULTS
 # -----------------------------
