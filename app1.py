@@ -127,6 +127,13 @@ def plotly_gauge(score):
 st.title("🧠 Student Stress Predictor")
 st.caption("Estimate your stress level based on your habits")
 
+st.markdown("### 📈 Model Performance")
+
+st.metric(
+    label="Accuracy",
+    value=f"{round(accuracy * 100, 1)}%"
+)
+
 st.info("⚠️ This is an educational tool and not medical advice.")
 
 st.divider()
