@@ -179,7 +179,7 @@ if st.button("🔍 Predict Stress Level"):
     })
 
     input_scaled = scaler.transform(input_data)
-   prediction = model.predict(input_scaled)[0]
+    prediction = model.predict(input_scaled)[0]
 
 # Convert prediction into score
 if prediction == "High":
