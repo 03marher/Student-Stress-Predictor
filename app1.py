@@ -52,37 +52,10 @@ X = df[[
     "study_load",
     "extra_activities"
 ]]
-def categorize_stress(x):
-    if x >= 4:
-        return "High"
-    elif x == 3:
-        return "Moderate"
-    else:
-        return "Low"
+y = df["stress_level"]
 
-y = df["stress_level"].apply(categorize_stress)
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Scale data
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Train model
-model = LogisticRegression(max_iter=1000)
-model.fit(X_train_scaled, y_train)
-
-# Accuracy (optional but useful)
-accuracy = model.score(X_test_scaled, y_test)
-st.caption(f"Model accuracy: {round(accuracy * 100, 1)}%")
+model = RandomForestClassifier()
+model.fit(X, y)
 
 # -----------------------------
 # RECOMMENDATIONS
@@ -108,10 +81,9 @@ def get_recommendations(level):
         ]
 
 # -----------------------------
-# PLOTLY GAUGE
+# GAUGE
 # -----------------------------
 def plotly_gauge(score):
-
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=score,
@@ -126,7 +98,6 @@ def plotly_gauge(score):
             ]
         }
     ))
-
     st.plotly_chart(fig, use_container_width=True)
 
 # -----------------------------
@@ -160,7 +131,7 @@ with col2:
 st.divider()
 
 # -----------------------------
-# SESSION STATE (fix for results)
+# SESSION STATE
 # -----------------------------
 if "result" not in st.session_state:
     st.session_state.result = None
@@ -178,29 +149,18 @@ if st.button("🔍 Predict Stress Level"):
         "extra_activities": [extra_activities]
     })
 
-    input_scaled = scaler.transform(input_data)
+    prediction = model.predict(input_data)[0]
+    score = int(prediction) * 20
 
-    # Get probabilities
-    probs = model.predict_proba(input_scaled)[0]
-    classes = model.classes_
-
-    # Convert probabilities into smooth score
-    score = 0
-    for i, cls in enumerate(classes):
-        if cls == "Low":
-            score += probs[i] * 35
-        elif cls == "Moderate":
-            score += probs[i] * 60
-        elif cls == "High":
-            score += probs[i] * 85
-
-    score = int(score)
-
-    # Final label
-    prediction = model.predict(input_scaled)[0]
-    level = prediction
+    if score >= 80:
+        level = "High"
+    elif score >= 60:
+        level = "Moderate"
+    else:
+        level = "Low"
 
     st.session_state.result = (score, level)
+
 # -----------------------------
 # DISPLAY RESULTS
 # -----------------------------
@@ -210,10 +170,8 @@ if st.session_state.result:
 
     st.subheader("📊 Your Result")
 
-    # Gauge (FIXED)
     plotly_gauge(score)
 
-    # Status message
     if level == "High":
         st.error("🔴 High Stress Level")
     elif level == "Moderate":
@@ -221,16 +179,11 @@ if st.session_state.result:
     else:
         st.success("🟢 Low Stress Level")
 
-    # Recommendations (FIXED)
     st.markdown("### 💡 Recommendations")
 
     tips = get_recommendations(level)
-
     for tip in tips:
         st.write(f"• {tip}")
-
-st.markdown("### 📊 Model Info")
-st.write(f"Accuracy: {round(accuracy * 100, 1)}%")
 
 # -----------------------------
 # FOOTER
