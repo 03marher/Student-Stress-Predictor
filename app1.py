@@ -176,12 +176,12 @@ prediction = model.predict(input_scaled)[0]
 score = int(prediction) * 20
 score = min(max(score, 0), 100)   # keeps it between 0–100
 
-    if score >= 80:
-        level = "High"
-    elif score >= 60:
-        level = "Moderate"
-    else:
-        level = "Low"
+if score >= 80:
+    level = "High"
+elif score >= 60:
+    level = "Moderate"
+else:
+    level = "Low"
 
     st.session_state.result = (score, level)
 
