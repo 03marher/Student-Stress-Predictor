@@ -149,25 +149,26 @@ if st.button("🔍 Predict Stress Level"):
         "extra_activities": [extra_activities]
     })
 
-prediction = model.predict(input_data)[0]
+    prediction = model.predict(input_data)[0]
 
-# Base score from model
-score = int(prediction) * 20
+    # Base score
+    score = int(prediction) * 20
 
-# Adjust using logic (this improves realism)
-score += (study_load * 3)
-score -= (sleep_quality * 3)
-score += (headaches * 2)
+    # Add logic (makes it feel more realistic)
+    score += (study_load * 3)
+    score -= (sleep_quality * 3)
+    score += (headaches * 2)
 
-# keep it in range
-score = min(max(score, 0), 100)
+    # Keep score valid
+    score = min(max(score, 0), 100)
 
-if score >= 80:
-    level = "High"
-elif score >= 60:
-    level = "Moderate"
-else:
-    level = "Low"
+    # Determine level
+    if score >= 80:
+        level = "High"
+    elif score >= 60:
+        level = "Moderate"
+    else:
+        level = "Low"
 
     st.session_state.result = (score, level)
 
