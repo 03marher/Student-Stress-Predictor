@@ -179,26 +179,28 @@ if st.button("🔍 Predict Stress Level"):
     })
 
     input_scaled = scaler.transform(input_data)
-probs = model.predict_proba(input_scaled)[0]
-classes = model.classes_
 
-# Convert probabilities into a smooth score
-score = 0
-for i, cls in enumerate(classes):
-    if cls == "Low":
-        score += probs[i] * 35
-    elif cls == "Moderate":
-        score += probs[i] * 60
-    elif cls == "High":
-        score += probs[i] * 85
+    # Get probabilities
+    probs = model.predict_proba(input_scaled)[0]
+    classes = model.classes_
 
-score = int(score)
+    # Convert probabilities into smooth score
+    score = 0
+    for i, cls in enumerate(classes):
+        if cls == "Low":
+            score += probs[i] * 35
+        elif cls == "Moderate":
+            score += probs[i] * 60
+        elif cls == "High":
+            score += probs[i] * 85
 
-# Get main prediction label
-prediction = model.predict(input_scaled)[0]
-level = prediction
+    score = int(score)
 
-st.session_state.result = (score, level)
+    # Final label
+    prediction = model.predict(input_scaled)[0]
+    level = prediction
+
+    st.session_state.result = (score, level)
 # -----------------------------
 # DISPLAY RESULTS
 # -----------------------------
