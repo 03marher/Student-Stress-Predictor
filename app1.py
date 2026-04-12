@@ -52,7 +52,15 @@ X = df[[
     "study_load",
     "extra_activities"
 ]]
-y = df["stress_level"]
+def categorize_stress(x):
+    if x >= 4:
+        return "High"
+    elif x == 3:
+        return "Moderate"
+    else:
+        return "Low"
+
+y = df["stress_level"].apply(categorize_stress)
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -171,18 +179,17 @@ if st.button("🔍 Predict Stress Level"):
     })
 
     input_scaled = scaler.transform(input_data)
-    prediction = model.predict(input_scaled)[0]
+   prediction = model.predict(input_scaled)[0]
 
-    score = int(prediction) * 20
-    score = min(max(score, 0), 100)
-    score = int(score * 0.9 + 10)
+# Convert prediction into score
+if prediction == "High":
+    score = 85
+elif prediction == "Moderate":
+    score = 60
+else:
+    score = 35
 
-    if score >= 80:
-        level = "High"
-    elif score >= 60:
-        level = "Moderate"
-    else:
-        level = "Low"
+level = prediction
 
     st.session_state.result = (score, level)
 
