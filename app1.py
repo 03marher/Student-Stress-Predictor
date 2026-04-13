@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 st.set_page_config(
     page_title="Student Stress Predictor",
     page_icon="🧠",
-    layout="wide"
+    layout="centered"
 )
 
 # -----------------------------
@@ -18,7 +18,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 .stButton > button {
-    background-color: #ff6b6b;
+    background-color: #5DADE2;
     color: white;
     border-radius: 10px;
     height: 3em;
