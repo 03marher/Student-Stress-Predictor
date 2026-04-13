@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 st.set_page_config(
     page_title="Student Stress Predictor",
     page_icon="🧠",
-    st.set_page_config(layout="wide")
+    layout="wide"
 )
 
 # -----------------------------
