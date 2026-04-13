@@ -115,9 +115,21 @@ st.divider()
 # -----------------------------
 st.subheader("📋 Enter Your Information")
 
-st.info(
-    "ℹ️ For best results, answer honestly based on your typical week.\n"
-    "If something does not apply to you, select 1 (lowest value)."
+st.markdown(
+    """
+    <div style="
+        background-color:#f0f4ff;
+        padding:12px;
+        border-radius:10px;
+        text-align:center;
+        font-weight:500;
+        color:#2b3a67;
+    ">
+        ℹ️ For best results, answer honestly based on your typical week.<br>
+        If something does not apply to you, select 1 (lowest value).
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
 col1, col2 = st.columns(2)
