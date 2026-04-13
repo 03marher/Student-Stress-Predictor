@@ -137,32 +137,47 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown(
-        "<div style='font-weight:600;'>Rating of the student’s sleep quality (1–5). 1 = Very poor, 5 = Excellent.</div>",
+        "<div style='font-weight:600;'>"
+        "Rating of the student’s sleep quality (1–5).<br>"
+        "1 = Very poor, 5 = Excellent."
+        "</div>",
         unsafe_allow_html=True
     )
     sleep_quality = st.slider("😴 Sleep Quality", 1, 5)
 
     st.markdown(
-        "<div style='font-weight:600;'>Number of times the student experiences headaches per week. 1 = Rare, 5 = Very frequent.</div>",
+        "<div style='font-weight:600;'>"
+        "Number of times the student experiences headaches per week.<br>"
+        "1 = Rare, 5 = Very frequent."
+        "</div>",
         unsafe_allow_html=True
     )
     headaches = st.slider("🤕 Headache Frequency", 1, 5)
 
     st.markdown(
-        "<div style='font-weight:600;'>Self-assessed academic performance on a 1–5 scale. 1 = Low, 5 = High.</div>",
+        "<div style='font-weight:600;'>"
+        "Self-assessed academic performance on a 1–5 scale.<br>"
+        "1 = Low, 5 = High."
+        "</div>",
         unsafe_allow_html=True
     )
     academic_performance = st.slider("📚 Academic Performance", 1, 5)
 
 with col2:
     st.markdown(
-        "<div style='font-weight:600;'>Perceived heaviness of the student’s study workload (1–5). 1 = Light, 5 = Very heavy.</div>",
+        "<div style='font-weight:600;'>"
+        "Perceived heaviness of the student’s study workload (1–5).<br>"
+        "1 = Light, 5 = Very heavy."
+        "</div>",
         unsafe_allow_html=True
     )
     study_load = st.slider("📝 Study Load", 1, 5)
 
     st.markdown(
-        "<div style='font-weight:600;'>Number of times the student participates in extracurricular activities per week. 1 = Low involvement, 5 = Very active.</div>",
+        "<div style='font-weight:600;'>"
+        "Number of times the student participates in extracurricular activities per week.<br>"
+        "1 = Low involvement, 5 = Very active."
+        "</div>",
         unsafe_allow_html=True
     )
     extra_activities = st.slider("🎯 Extracurricular Activities", 1, 5)
