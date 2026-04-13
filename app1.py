@@ -116,28 +116,28 @@ st.divider()
 st.subheader("📋 Enter Your Information")
 
 st.info(
-    "ℹ️ For best results, answer honestly based on your typical week. \n"
+    "ℹ️ For best results, answer honestly based on your typical week.\n"
     "If something does not apply to you, select 1 (lowest value)."
 )
 
 col1, col2 = st.columns(2)
 
 with col1:
-    sleep_quality = st.slider("😴 Sleep Quality", 1, 5)
     st.caption("Rating of the student’s sleep quality (1–5). 1 = Very poor, 5 = Excellent.")
+    sleep_quality = st.slider("😴 Sleep Quality", 1, 5)
 
-    headaches = st.slider("🤕 Headache Frequency", 1, 5)
     st.caption("Number of times the student experiences headaches per week. 1 = Rare, 5 = Very frequent.")
+    headaches = st.slider("🤕 Headache Frequency", 1, 5)
 
-    academic_performance = st.slider("📚 Academic Performance", 1, 5)
     st.caption("Self-assessed academic performance on a 1–5 scale. 1 = Low, 5 = High.")
+    academic_performance = st.slider("📚 Academic Performance", 1, 5)
 
 with col2:
-    study_load = st.slider("📝 Study Load", 1, 5)
     st.caption("Perceived heaviness of the student’s study workload (1–5). 1 = Light, 5 = Very heavy.")
+    study_load = st.slider("📝 Study Load", 1, 5)
 
-    extra_activities = st.slider("🎯 Extracurricular Activities", 1, 5)
     st.caption("Number of times the student participates in extracurricular activities per week. 1 = Low involvement, 5 = Very active.")
+    extra_activities = st.slider("🎯 Extracurricular Activities", 1, 5)
 
 
 # -----------------------------
