@@ -115,18 +115,44 @@ st.divider()
 # -----------------------------
 st.subheader("📋 Enter Your Information")
 
-st.markdown("Use a scale from **1 (Very Low/Poor)** to **5 (Very High/Excellent)**.")
+st.info(
+    "ℹ️ For best results, answer honestly based on your typical week. "
+    "If something does not apply to you, select 1 (lowest value)."
+)
 
 col1, col2 = st.columns(2)
 
 with col1:
-    sleep_quality = st.slider("😴 Sleep Quality (1 = Poor, 5 = Excellent)", 1, 5)
-    headaches = st.slider("🤕 Headache Frequency (1 = Rare, 5 = Frequent)", 1, 5)
-    academic_performance = st.slider("📚 Academic Performance (1 = Low, 5 = High)", 1, 5)
+    sleep_quality = st.slider(
+        "😴 Sleep Quality",
+        1, 5,
+        help="Rate your sleep quality: 1 = Very poor, 5 = Excellent"
+    )
+
+    headaches = st.slider(
+        "🤕 Headaches per Week",
+        0, 5,
+        help="Number of times you experience headaches in a week"
+    )
+
+    academic_performance = st.slider(
+        "📚 Academic Performance",
+        1, 5,
+        help="Your self-assessed academic performance: 1 = Low, 5 = High"
+    )
 
 with col2:
-    study_load = st.slider("📝 Study Load (1 = Light, 5 = Heavy)", 1, 5)
-    extra_activities = st.slider("🎯 Extracurricular Involvement (1 = Low, 5 = High)", 1, 5)
+    study_load = st.slider(
+        "📝 Study Load",
+        1, 5,
+        help="How heavy your coursework feels: 1 = Light, 5 = Very heavy"
+    )
+
+    extra_activities = st.slider(
+        "🎯 Extracurricular Activities per Week",
+        0, 5,
+        help="How many times per week you participate in extracurricular activities"
+    )
 
 st.divider()
 
