@@ -118,12 +118,12 @@ st.subheader("📋 Enter Your Information")
 st.markdown(
     """
     <div style="
-        background-color:#f0f4ff;
+        background-color:#fdecef;
         padding:12px;
         border-radius:10px;
         text-align:center;
         font-weight:500;
-        color:#2b3a67;
+        color:#c2185b;
     ">
         ℹ️ For best results, answer honestly based on your typical week.<br>
         If something does not apply to you, select 1 (lowest value).
