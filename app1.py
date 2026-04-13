@@ -124,6 +124,7 @@ st.markdown(
         text-align:center;
         font-weight:500;
         color:#c2185b;
+        margin-bottom:20px;
     ">
         ℹ️ For best results, answer honestly based on your typical week.<br>
         If something does not apply to you, select 1 (lowest value).
