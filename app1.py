@@ -17,16 +17,19 @@ st.set_page_config(
 # -----------------------------
 st.markdown("""
 <style>
-.block-container {
-    max-width: 800px;
-    padding-top: 2rem;
-}
-.stButton>button {
-    width: 100%;
-    border-radius: 12px;
+.stButton > button {
+    background-color: #ff6b6b;
+    color: white;
+    border-radius: 10px;
     height: 3em;
     font-size: 16px;
     font-weight: 600;
+    border: none;
+}
+
+.stButton > button:hover {
+    background-color: #ff4c4c;
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -192,7 +195,13 @@ if "result" not in st.session_state:
 # -----------------------------
 # BUTTON
 # -----------------------------
-if st.button("🔍 Predict Stress Level"):
+st.markdown("<br>", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    predict = st.button("🔍 Predict Stress Level", use_container_width=True)
+
+if predict:
 
     input_data = pd.DataFrame({
         "sleep_quality": [sleep_quality],
